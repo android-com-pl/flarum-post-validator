@@ -36,9 +36,9 @@ class ValidatePosts extends AbstractCommand
     {
         $query = CommentPost::query()->where('type', '=', 'comment');
 
+        $this->info('Validating all posts. This may take a while.');
         $progressBar = new ProgressBar(new ConsoleOutput(), $query->count());
         $progressBar->setFormat('very_verbose');
-        $progressBar->setMessage('Validating all posts. This may take a while.');
         $progressBar->start();
 
         $invalid = [];
