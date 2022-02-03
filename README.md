@@ -4,6 +4,8 @@
 
 Validates all posts in the Flarum database. Useful after migrating from other software to Flarum.
 
+![image](https://user-images.githubusercontent.com/25438601/152416540-9a9180d0-3f9e-4a96-9243-a4949afea1de.png)
+
 ## Installation
 
 Install with composer:
