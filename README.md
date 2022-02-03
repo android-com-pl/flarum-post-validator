@@ -14,7 +14,7 @@ composer require acpl/flarum-post-validator
 
 ## Usage
 ```sh
-php flarum validate-posts --chunk=1000
+php flarum validate-posts --chunk=100
 ```
 
 ## How it works?
