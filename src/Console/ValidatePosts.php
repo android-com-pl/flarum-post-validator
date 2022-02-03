@@ -6,10 +6,10 @@ use Exception;
 use Flarum\Console\AbstractCommand;
 use Flarum\Http\UrlGenerator;
 use Flarum\Post\CommentPost;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Contracts\Filesystem\Factory;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 class ValidatePosts extends AbstractCommand
@@ -42,7 +42,8 @@ class ValidatePosts extends AbstractCommand
         $progressBar->start();
 
         $invalid = [];
-        $query->chunk($this->input->getOption('chunk') ?? 100,
+        $query->chunk(
+            $this->input->getOption('chunk') ?? 100,
             function ($posts) use (&$invalid, &$progressBar) {
                 foreach ($posts as $post) {
                     try {
@@ -50,13 +51,16 @@ class ValidatePosts extends AbstractCommand
                     } catch (Exception $e) {
                         $invalid[] = [
                             'id' => $post->id,
-                            'url' => $this->url->to('forum')->route('discussion',
-                                ['id' => $post->discussion_id, 'near' => $post->number]),
+                            'url' => $this->url->to('forum')->route(
+                                'discussion',
+                                ['id' => $post->discussion_id, 'near' => $post->number]
+                            ),
                         ];
                     }
                     $progressBar->advance();
                 }
-            });
+            }
+        );
 
         $progressBar->finish();
         $this->info("\n".count($invalid).' invalid posts found');
