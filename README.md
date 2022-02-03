@@ -1,4 +1,4 @@
-# Post Validator
+# Flarum Post Validator
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/acpl/flarum-post-validator.svg)](https://packagist.org/packages/acpl/flarum-post-validator) [![Total Downloads](https://img.shields.io/packagist/dt/acpl/flarum-post-validator.svg)](https://packagist.org/packages/acpl/flarum-post-validator)
 
