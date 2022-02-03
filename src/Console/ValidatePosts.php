@@ -34,7 +34,7 @@ class ValidatePosts extends AbstractCommand
     {
         $this->info('Validating all posts. This can take a while.');
         $invalid = [];
-        CommentPost::query()->select()->where('type', '=', 'comment')->chunk($this->input->getOption('chunk') ?? 1000,
+        CommentPost::query()->select()->where('type', '=', 'comment')->chunk($this->input->getOption('chunk') ?? 100,
             function ($posts) use (&$invalid) {
                 foreach ($posts as $post) {
                     try {
