@@ -6,9 +6,11 @@ use Exception;
 use Flarum\Console\AbstractCommand;
 use Flarum\Http\UrlGenerator;
 use Flarum\Post\CommentPost;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Contracts\Filesystem\Factory;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class ValidatePosts extends AbstractCommand
 {
@@ -32,10 +34,16 @@ class ValidatePosts extends AbstractCommand
 
     protected function fire()
     {
-        $this->info('Validating all posts. This can take a while.');
+        $query = CommentPost::query()->where('type', '=', 'comment');
+
+        $progressBar = new ProgressBar(new ConsoleOutput(), $query->count());
+        $progressBar->setFormat('very_verbose');
+        $progressBar->setMessage('Validating all posts. This may take a while.');
+        $progressBar->start();
+
         $invalid = [];
-        CommentPost::query()->select()->where('type', '=', 'comment')->chunk($this->input->getOption('chunk') ?? 100,
-            function ($posts) use (&$invalid) {
+        $query->chunk($this->input->getOption('chunk') ?? 100,
+            function ($posts) use (&$invalid, &$progressBar) {
                 foreach ($posts as $post) {
                     try {
                         $post->formatContent();
@@ -46,10 +54,12 @@ class ValidatePosts extends AbstractCommand
                                 ['id' => $post->discussion_id, 'near' => $post->number]),
                         ];
                     }
+                    $progressBar->advance();
                 }
             });
 
-        $this->info(count($invalid).' invalid posts found');
+        $progressBar->finish();
+        $this->info("\n".count($invalid).' invalid posts found');
 
         if (count($invalid)) {
             $this->uploadDir->makeDirectory('invalid-posts');
